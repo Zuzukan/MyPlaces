@@ -9,7 +9,7 @@ import UIKit
 
 class NewPlacesViewController: UITableViewController {
     
-    
+    //MARK: - IB Outlets
     @IBOutlet weak var newImageLocation: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!
@@ -22,10 +22,10 @@ class NewPlacesViewController: UITableViewController {
         saveBarButton.isEnabled = false
        
     }
-
+//MARK: - TableView Setup
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            
+            alertSeet()
         } else {
             view.endEditing(true)
         }
@@ -57,6 +57,36 @@ extension NewPlacesViewController: UITextFieldDelegate {
             saveBarButton.isEnabled = false
         } else {
             saveBarButton.isEnabled = true
+        }
+    }
+}
+//MARK: - Alert Creation
+extension NewPlacesViewController {
+    func alertSeet() {
+        let alertSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let camera = UIAlertAction(title: "Camera", style: .default) { _ in
+            self.chooseImagePicker(source: .camera)
+        }
+        let photo = UIAlertAction(title: "Photo", style: .default) { _ in
+            self.chooseImagePicker(source: .savedPhotosAlbum)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        alertSheet.addAction(camera)
+        alertSheet.addAction(photo)
+        alertSheet.addAction(cancel)
+        present(alertSheet, animated: true)
+    }
+}
+
+//MARK: - Work with Image
+extension NewPlacesViewController {
+    func chooseImagePicker(source: UIImagePickerController.SourceType) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(source) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
+            imagePicker.sourceType = source
+            present(imagePicker, animated: true)
         }
     }
 }
