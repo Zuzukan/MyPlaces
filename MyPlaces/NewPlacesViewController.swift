@@ -64,12 +64,20 @@ extension NewPlacesViewController: UITextFieldDelegate {
 extension NewPlacesViewController {
     func alertSeet() {
         let alertSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let imageCamera = #imageLiteral(resourceName: "camera")
         let camera = UIAlertAction(title: "Camera", style: .default) { _ in
             self.chooseImagePicker(source: .camera)
         }
+        camera.setValue(imageCamera, forKey: "image")
+        camera.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+        
+        let imagePhoto = #imageLiteral(resourceName: "photo")
         let photo = UIAlertAction(title: "Photo", style: .default) { _ in
             self.chooseImagePicker(source: .savedPhotosAlbum)
         }
+        photo.setValue(imagePhoto, forKey: "image")
+        photo.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+        
         let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         alertSheet.addAction(camera)
         alertSheet.addAction(photo)
@@ -79,14 +87,27 @@ extension NewPlacesViewController {
 }
 
 //MARK: - Work with Image
-extension NewPlacesViewController {
+extension NewPlacesViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
         
         if UIImagePickerController.isSourceTypeAvailable(source) {
             let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
             imagePicker.allowsEditing = true
             imagePicker.sourceType = source
             present(imagePicker, animated: true)
         }
     }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        newImageLocation.image = info[.editedImage] as? UIImage
+        newImageLocation.contentMode = .scaleAspectFill
+        newImageLocation.clipsToBounds = true
+        dismiss(animated: true)
+        
+    }
+    
+    
+    
+    
 }
