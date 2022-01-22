@@ -27,7 +27,7 @@ class CreationCell: UITableViewCell {
     }
 
     func setupCell(place: Place) {
-        imageOfRestoran.image = UIImage(named: place.image)
+        
         nameLabel.text = place.name
         locationLabel.text = place.location
         typeLabel.text = place.type

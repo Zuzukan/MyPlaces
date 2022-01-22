@@ -9,7 +9,7 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
-    let places = Place.getPlaces()
+    var places = Place.getPlaces()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +18,10 @@ class MainViewController: UITableViewController {
         // self.clearsSelectionOnViewWillAppear = false
         self.navigationItem.leftBarButtonItem = self.editButtonItem
        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
     }
 
     // MARK: - Table view data source
@@ -35,28 +39,33 @@ class MainViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CreationCell
-        
-        cell.setupCell(place: places[indexPath.row])
+        let place = places[indexPath.row]
+        cell.setupCell(place: place)
         cell.imageOfRestoran.layer.cornerRadius = cell.imageOfRestoran.frame.height / 2
         
+        if place.image == nil {
+            cell.imageOfRestoran.image = UIImage(named: place.placeImage!)
+        } else {
+            cell.imageOfRestoran.image = place.image
+        }
 
         return cell
     }
     
-
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
     
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
+            places.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
@@ -83,6 +92,9 @@ class MainViewController: UITableViewController {
     }
     */
     @IBAction func unwindToMainViewController(_ segue: UIStoryboardSegue) {
-        
+        guard let newPlaceVC = segue.source as? NewPlacesViewController else { return }
+        newPlaceVC.saveNewPlace()
+        places.append(newPlaceVC.newPlace!)
+        tableView.reloadData()
     }
 }

@@ -237,15 +237,19 @@
                     <navigationItem key="navigationItem" title="Creation Place" id="ah2-96-cfF">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="atk-IV-k9i">
                             <connections>
-                                <segue destination="SjD-By-LpO" kind="unwind" unwindAction="unwindToMainViewController:" id="N1O-uo-P4Z"/>
+                                <action selector="cancelButton:" destination="0Io-5O-dVP" id="mN2-lf-AEA"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="gIl-1Z-PyQ"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="gIl-1Z-PyQ">
+                            <connections>
+                                <segue destination="SjD-By-LpO" kind="unwind" identifier="SaveButton" unwindAction="unwindToMainViewController:" id="e9s-RP-g14"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="locationTextField" destination="cI0-h3-YUG" id="Byb-JN-4h9"/>
                         <outlet property="nameTextField" destination="9fa-58-jLT" id="sCc-X3-8Iq"/>
-                        <outlet property="newImageLocation" destination="cO8-Qb-TtA" id="ifP-SB-wwX"/>
+                        <outlet property="placeImage" destination="cO8-Qb-TtA" id="ifP-SB-wwX"/>
                         <outlet property="saveBarButton" destination="gIl-1Z-PyQ" id="Y1O-d7-hbm"/>
                         <outlet property="typeTextField" destination="C4b-mY-cpp" id="evP-He-BwB"/>
                     </connections>

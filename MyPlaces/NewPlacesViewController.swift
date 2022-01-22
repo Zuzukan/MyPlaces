@@ -8,21 +8,46 @@
 import UIKit
 
 class NewPlacesViewController: UITableViewController {
+    var newPlace: Place?
+    var imageIsChanged = false
     
     //MARK: - IB Outlets
-    @IBOutlet weak var newImageLocation: UIImageView!
+    @IBOutlet weak var placeImage: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var typeTextField: UITextField!
     @IBOutlet weak var saveBarButton: UIBarButtonItem!
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         saveBarButton.isEnabled = false
+        nameTextField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+    }
+    
+    @IBAction func cancelButton(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func saveNewPlace() {
+        
+        var image: UIImage?
+        
+        if imageIsChanged == true {
+            image = placeImage.image
+        } else {
+            image = #imageLiteral(resourceName: "imagePlaceholder")
+        }
+        
+        newPlace = Place(placeImage: nil,
+                         name: nameTextField.text!,
+                         location: locationTextField.text,
+                         type: typeTextField.text,
+                         image: image)
        
     }
-//MARK: - TableView Setup
+    
+    //MARK: - TableView Setup
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             alertSeet()
@@ -30,16 +55,9 @@ class NewPlacesViewController: UITableViewController {
             view.endEditing(true)
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
+     
+    
 }
 
 //MARK: - TextFieldDelegate
@@ -50,13 +68,11 @@ extension NewPlacesViewController: UITextFieldDelegate {
         textField.endEditing(true)
         return   true
     }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if nameTextField.text == "" {
-            nameTextField.placeholder = "Введите имя заведения"
-            saveBarButton.isEnabled = false
-        } else {
+    @objc private func textFieldChanged() {
+        if nameTextField.text?.isEmpty == false {
             saveBarButton.isEnabled = true
+        } else {
+            saveBarButton.isEnabled = false
         }
     }
 }
@@ -100,9 +116,10 @@ extension NewPlacesViewController: UIImagePickerControllerDelegate, UINavigation
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        newImageLocation.image = info[.editedImage] as? UIImage
-        newImageLocation.contentMode = .scaleAspectFill
-        newImageLocation.clipsToBounds = true
+        placeImage.image = info[.editedImage] as? UIImage
+        imageIsChanged = true
+        placeImage.contentMode = .scaleAspectFill
+        placeImage.clipsToBounds = true
         dismiss(animated: true)
         
     }
